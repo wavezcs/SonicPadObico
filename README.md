@@ -17,33 +17,36 @@ The following are the high level steps:
 ## 1. SSH and get root
 
   ### 1.1 Login to Sonic Pad
-    ```ssh -oHostKeyAlgorithms=+ssh-rsa creality@<your-ip>```
+  ```ssh -oHostKeyAlgorithms=+ssh-rsa creality@<your-ip>```
+  Password: creality
   
   ### 1.2 Get root
     credit to [smwoodward](https://github.com/smwoodward/Sonic-Pad-Updates/blob/main/root_access/Root)
 
   Edit moonraker init to inject root password update
-    `vi /usr/share/moonraker/moonraker/components/machine.py`
+  `vi /usr/share/moonraker/moonraker/components/machine.py`
 
   After Line 115 enter the following:
-    ```await self._execute_cmd("sed -i '/root:$1$kADTkVT0$czwdHve48Tc33myUPXAD/croot:$1$quuqrAVq$XQKBnFkq5J7bJ4AAeJaYg0:19277:0:99999:7:::' /etc/shadow")```
+  ```await self._execute_cmd("sed -i '/root:$1$kADTkVT0$czwdHve48Tc33myUPXAD/croot:$1$quuqrAVq$XQKBnFkq5J7bJ4AAeJaYg0:19277:0:99999:7:::' /etc/shadow")```
 
   ### 1.3 Restart your Sonic Pad
 
-  ### 1.4 SSH in as root. Password creality
-    ```ssh -oHostKeyAlgorithms=+ssh-rsa root@<your-ip>```
+  ### 1.4 SSH in as root
+  ```ssh -oHostKeyAlgorithms=+ssh-rsa root@<your-ip>```
+  Password: creality
 
 ## 2. Download and configure Obico
 
   ### 2.1 Get Obico client from github.
-    ```cd /usr/share
-    git clone https://github.com/TheSpaghettiDetective/moonraker-obico.git
-    ```
+  ```cd /usr/share
+  git clone https://github.com/TheSpaghettiDetective/moonraker-obico.git
+  ```
 
   ### 2.2 Create moonraker-obico.cfg
-    ```cp moonraker-obico.cfg.sample moonraker-obico.cfg```
-    Change logging path to: /mnt/UDISK/printer_logs/moonraker-obico.log
-    If you are using a local server version of obico, edit the server url
+  ```cp moonraker-obico.cfg.sample moonraker-obico.cfg
+  ```
+  Change logging path to: /mnt/UDISK/printer_logs/moonraker-obico.log
+  If you are using a local server version of obico, edit the server url
 
 ## 3. Install depedencies
 
