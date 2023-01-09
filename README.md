@@ -3,7 +3,9 @@ This guide provide instructions to setup Obico for Klipper on the Creality Sonic
 
 If you do have problems, you can fully reset your pad by running: `/usr/share/script/recovery.sh all`
 
-This is just a guide. At some point I'll look to automate this into a script. This is all hard coded for now.
+This guide was setup for Sonic Pad firmware `V1.0.6.35.154  02 Dec. 2022`
+
+At some point I'll look to automate this into a script. This is all hard coded for now.
 The following are the high level steps:
 
 1. SSH and get root
