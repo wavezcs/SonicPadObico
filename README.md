@@ -2,7 +2,7 @@
 I managed to get Obico running on the Sonic Pad so below are instructions to get it going. You will need to gain root in order to complete these steps. Please be careful as anytime you are using root, there is a chance you could brick the device, if you can't boot into it. Creality has not provided a process to completely flash the device.
 
 
-**This guide was written for folks with prior experience using linux. Only follow this guide if you are comfortable editing files, navigating linux filesystems, and can do your own troubleshooting. This worked for me, but I can't guarantee it will work for you. Please make sure you are on the same firmware before running. This guide assumes you have 1 printer. I have not tested this on a Pad connected to multiple printers. I am using a Ender 5 S1 so I can't guarentee this will work for you and other printers.
+**This guide was written for folks with prior experience using linux. Only follow this guide if you are comfortable editing files, navigating linux filesystems, and can do your own troubleshooting. This worked for me, but I can't guarantee it will work for you. Please make sure you are on the same firmware before running. This guide assumes you have 1 printer. I have not tested this on a Pad connected to multiple printers. I am using a Ender 5 S1 so I can't guarentee this will work for you and other printers.**
 
 
 >If you do run into some trouble, you can restore the device by running the following command:
