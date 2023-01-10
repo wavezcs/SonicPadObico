@@ -88,7 +88,7 @@ Let's do it!
   pip3 install --require-virtualenv backoff
   pip3 install --require-virtualenv sentry_sdk
   pip3 install --require-virtualenv bson
-  pip3 install --require-virtualenv pathvalidat
+  pip3 install --require-virtualenv pathvalidate
   ```
 
 
