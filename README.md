@@ -1,7 +1,8 @@
 # Obico for Klipper on the Creality Sonic Pad
-This guide provide instructions to setup Obico for Klipper on the Creality Sonic Pad. Please be careful following these instructions as you may brick your Sonic Pad.
+I managed to get Obico running on the Sonic Pad so below are instructions to get it going. You will need to gain root in order to complete these steps. Please be careful as anytime you are using root, there is a chance you could brick the device, if you can't boot into it. Creality has not provided a process to completely flash the device.
 
-If you do have problems, you can fully reset your pad by running: `/usr/share/script/recovery.sh all`
+>If you do run into some trouble, you can restore the device by running the following command:
+>>/usr/share/script/recovery.sh all
 
 This guide was setup for Sonic Pad firmware `V1.0.6.35.154  02 Dec. 2022`
 
@@ -14,14 +15,16 @@ The following are the high level steps:
 4. Link printer
 5. Create service
 
+Let's do it!
+
 ## 1. SSH and get root
 
   ### 1.1 Login to Sonic Pad
-  ```ssh -oHostKeyAlgorithms=+ssh-rsa creality@<your-ip>```
-  Password: creality
+  ```ssh -oHostKeyAlgorithms=+ssh-rsa creality@<your-ip/hostname>```
+  >Password: creality
   
   ### 1.2 Get root
-    credit to [smwoodward](https://github.com/smwoodward/Sonic-Pad-Updates/blob/main/root_access/Root)
+  credit to [smwoodward](https://github.com/smwoodward/Sonic-Pad-Updates/blob/main/root_access/Root) for root access method
 
   Edit moonraker init to inject root password update
   `vi /usr/share/moonraker/moonraker/components/machine.py`
@@ -32,68 +35,90 @@ The following are the high level steps:
   ### 1.3 Restart your Sonic Pad
 
   ### 1.4 SSH in as root
-  ```ssh -oHostKeyAlgorithms=+ssh-rsa root@<your-ip>```
-  Password: creality
+  ```ssh -oHostKeyAlgorithms=+ssh-rsa root@<your-ip/hostname>```
+  >Password: creality
 
 ## 2. Download and configure Obico
 
   ### 2.1 Get Obico client from github.
-  ```cd /usr/share
+  ```
+  cd /usr/share
   git clone https://github.com/TheSpaghettiDetective/moonraker-obico.git
   ```
 
   ### 2.2 Create moonraker-obico.cfg
-  ```cp moonraker-obico.cfg.sample moonraker-obico.cfg
   ```
-  Change logging path to: /mnt/UDISK/printer_logs/moonraker-obico.log
-  If you are using a local server version of obico, edit the server url
+  cp moonraker-obico.cfg.sample moonraker-obico.cfg
+  ```
+  >Edit config you copied and change logging path to: /mnt/UDISK/printer_logs/moonraker-obico.log
+  
+  >If you are using a local server version of obico, edit the server url
+
+
 
 ## 3. Install depedencies
 
-  ### 3.1 Setup python virtual environment to present version collisons
+  ### 3.1 Setup python virtual environment to prevent version collisons
   ```pip3 install virtualenv
      cd /usr/share/moonraker-obico
      virtualenv env
      source env/bin/activate
   ```
-     Verify you are running in the virtual environment.
-          `which python3`
-          
-     Output should be /usr/share/moonraker-obico/env/bin/python3
-
-  ### 3.2 Install required modules from the obico install
-  ```pip3 install --require-virtualenv -r requirements.txt```
   
-  Ignore the failure of psutil. We'll fix that
+  Verify you are running in the virtual environment.
+  
+  ```which python3```
+          
+  >Output should be /usr/share/moonraker-obico/env/bin/python3.
 
-  For some reason, I still got errors from module inclusion despite the above so run the following seperate as well:
+
+  ### 3.2 Install required modules from the obico installation kit
+ **Ignore the failure of psutil wheel build. We'll fix that.**
+ 
+ 
+ ```pip3 install --require-virtualenv -r requirements.txt```
+
+  For some reason, I still got errors from module inclusion despite the above so run the following as well:
   ```
-      pip3 install --require-virtualenv requests
-      pip3 install --require-virtualenv backoff
-      pip3 install --require-virtualenv sentry_sdk
-      pip3 install --require-virtualenv bson
-      pip3 install --require-virtualenv pathvalidat
+  pip3 install --require-virtualenv requests
+  pip3 install --require-virtualenv backoff
+  pip3 install --require-virtualenv sentry_sdk
+  pip3 install --require-virtualenv bson
+  pip3 install --require-virtualenv pathvalidat
   ```
+
 
   ### 3.3 Turns out python3-psutil is already installed from opkg. Copy in the psutil module to local env
-  ```cp -R /usr/lib/python3.7/site-packages/psutil* /usr/share/moonraker-obico/env/lib/python3.7/site-packages```
+  ```cp -R /usr/lib/python3.7/site-packages/psutil* /usr/share/moonraker-obico/env/lib/python3.7/site-packages/```
+ 
+ 
+  At this point obico should be ready to roll. Let's now get a printer connected.
+
 
 ## 4. Link printer
 
-  ### 4.1 Run linking client
+  ### 4.1 Retrieve linking code from obico website (or your own server)
+  
+  Go to [obico.io](https://app.obico.io/printers/wizard/setup/) and get a code to link your printer.
+ 
+  ### 4.2 Run linking client and enter the code from 4.1
   Execute the link app                  
   ```python3 -m moonraker_obico.link -c /usr/share/moonraker-obico/moonraker-obico.cfg```
 
-  ### 4.2 Retrieve linking code from obico website (or your own server)
-  [obico.io](https://app.obico.io/printers/wizard/setup/))
-  Enter the code you get from the klipper printer linking
 
   ### 4.3 Run obico
   Before running obico as a service, make sure it runs successfully. Watch for any errors.
+  
   Ignore errors on API hit rate limits if using obico.io cloud service
+  
+  To end obico, use ctrl-c
+  
   ```/usr/share/moonraker-obico/env/bin/python3 -m moonraker_obico.app -c /usr/share/moonraker-obico/moonraker-obico.cfg```
 
+
 ## 5. Create service
+
+  Now that everything should be running, lets setup Obico to run as a system service at boot
 
   ### 5.1 Create procd service
   Edit and put the following in `/etc/init.d/moonraker_obico_service`
@@ -116,7 +141,10 @@ The following are the high level steps:
   }
   ```
   
+  
   ### 5.2 Enable and run service
   ```/etc/init.d/moonraker_obico_service enable
-  /etc/init.d/moonraker_obico_service start```
+  /etc/init.d/moonraker_obico_service start
+  ```
 
+there you have it. you should be up and running with obico!
