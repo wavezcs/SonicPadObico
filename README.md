@@ -147,7 +147,8 @@ Let's do it!
   
   
   ### 5.2 Enable and run service
-  ```/etc/init.d/moonraker_obico_service enable
+  ```
+  /etc/init.d/moonraker_obico_service enable
   /etc/init.d/moonraker_obico_service start
   ```
 
