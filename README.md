@@ -10,6 +10,10 @@ I managed to get Obico running on the Sonic Pad so below are instructions to get
 
 This guide was setup for Sonic Pad firmware `V1.0.6.35.154  02 Dec. 2022`
 
+UPDATE 01-29-23:
+  - Obico still runs fine with the Jan update of the sonic pad
+  - Changed section on Procd to run as cron instead. Found that there needs to be a delay starting obico after moonracker.
+
 At some point I'll look to automate this into a script. This is all hard coded for now.
 The following are the high level steps:
 
@@ -17,7 +21,7 @@ The following are the high level steps:
 2. Download and configure Obico
 3. Install depedencies
 4. Link printer
-5. Create service
+5. Set to Run at Boot
 
 Let's do it!
 
@@ -120,36 +124,23 @@ Let's do it!
   ```/usr/share/moonraker-obico/env/bin/python3 -m moonraker_obico.app -c /usr/share/moonraker-obico/moonraker-obico.cfg```
 
 
-## 5. Create service
+## 5. Run at Boot
 
   Now that everything should be running, lets setup Obico to run as a system service at boot
-
-  ### 5.1 Create procd service
-  Edit and put the following in `/etc/init.d/moonraker_obico_service`
+  Previously I had tried to use procd to start, but found that Obico should run after moonraker is fully up and running.
+  I added a 30 second sleep to ensure that happens, but did not want to delay service start so running as cron seemed best. 
+  
+  ### 5.1 Create cron
+  Run: `crontab -e -u root`
+  
+  This will bring up crontab editor using vi. Use vi commands to insert, then wq.
+  you can verify the entry with 'crontab -l'
 
   ```
-  #!/bin/sh /etc/rc.common
-
-  START=95
-  STOP=1
-  DEPEND=fstab
-  USE_PROCD=1
-
-  start_service() {
-      procd_open_instance
-      procd_set_param stdout 1
-      procd_set_param stderr 1
-      procd_set_param env PYTHONPATH=/usr/share/moonraker-obico
-      procd_set_param command /usr/share/moonraker-obico/env/bin/python3 -m moonraker_obico.app -c /usr/share/moonraker-obico/moonraker-obico.cfg
-      procd_close_instance
-  }
+  @reboot sleep 30s && /usr/share/moonraker-obico/obico-start.sh
   ```
   
-  
-  ### 5.2 Enable and run service
-  ```
-  /etc/init.d/moonraker_obico_service enable
-  /etc/init.d/moonraker_obico_service start
-  ```
+  You can reboot and test to see if Obico starts correct. If you want to see if it is running, use ps to check the process:
+  ```ps | grep obico```
 
 there you have it. you should be up and running with obico!
