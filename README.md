@@ -130,7 +130,20 @@ Let's do it!
   Previously I had tried to use procd to start, but found that Obico should run after moonraker is fully up and running.
   I added a 30 second sleep to ensure that happens, but did not want to delay service start so running as cron seemed best. 
   
-  ### 5.1 Create cron
+  ### 5.1 Create start script
+  create file
+  `vi /usr/share/moonraker-obico/obico-start.sh`
+  
+  
+  contents of obico-start.sh:
+  ```
+  #!/bin/bash
+  set -e PYTHONPATH=/usr/share/moonraker-obico
+  /usr/share/moonraker-obico/env/bin/python3 -m moonraker_obico.app -c /usr/share/moonraker-obico/moonraker-obico.cfg
+  ```
+  
+ 
+  ### 5.2 Create cron
   Run: `crontab -e -u root`
   
   This will bring up crontab editor using vi. Use vi commands to insert, then wq.
