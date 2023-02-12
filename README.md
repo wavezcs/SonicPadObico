@@ -10,6 +10,8 @@ I managed to get Obico running on the Sonic Pad so below are instructions to get
 
 This guide was setup for Sonic Pad firmware `V1.0.6.35.154  02 Dec. 2022`
 
+UPDATE 02-12-23: Updated new section 5.1 to include start script contents. Also, note that if you have upgraded to the latest version of the sonicpad firmware, you should be able to retrieve the root password from the settings menu.
+
 UPDATE 01-29-23:
   - Obico still runs fine with the Jan update of the sonic pad
   - Changed section on Procd to run as cron instead. Found that there needs to be a delay starting obico after moonracker.
@@ -26,6 +28,8 @@ The following are the high level steps:
 Let's do it!
 
 ## 1. SSH and get root
+
+  NOTE - before changing the root password, the latest update of the sonic pad will allow you to retrieve the root password. You won't need to complete the steps below for resetting the root password
 
   ### 1.1 Login to Sonic Pad
   ```ssh -oHostKeyAlgorithms=+ssh-rsa creality@<your-ip/hostname>```
